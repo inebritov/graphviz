@@ -6,15 +6,15 @@ var network = null,
     visitedNodes = [],
     btnDraw = document.getElementById('draw'),
     btnClear = document.getElementById('clear'),
-    btnDepthBypass = document.getElementById('depthBypass'),
-    btnBreadthBypass = document.getElementById('breadthBypass'),
+    btnDepthFirstSearch = document.getElementById('depthFirstSearch'),
+    btnBreadthFirstSearch = document.getElementById('breadthFirstSearch'),
     txtData = document.getElementById('data'),
     txtError = document.getElementById('error');
 
 btnDraw.onclick = draw;
 btnClear.onclick = clearGraph;
-btnDepthBypass.onclick = depthBypass;
-btnBreadthBypass.onclick = breadthBypass;
+btnDepthFirstSearch.onclick = depthFirstSearch;
+btnBreadthFirstSearch.onclick = breadthFirstSearch;
 
 window.onresize = function() {
     network.redraw()
@@ -55,7 +55,7 @@ function getSelectedNode() {
     return node;
 }
 
-function breadthBypass() {
+function breadthFirstSearch() {
 
     var node = getSelectedNode(),
         q = [node.id];
@@ -63,17 +63,15 @@ function breadthBypass() {
     clearGraph();
 
     while (q.length) {
-        var nodeId = q.shift(),
-            node = network.nodes[nodeId];
+        var nodeId = q.shift();
+        node = network.nodes[nodeId];
 
         visitedNodes.push(nodeId);
         highlightNode(node, 1000 * order++);
 
         for (var i = 0; i < node.edges.length; i++) {
             var edge = node.edges[i],
-                nextNode = edge.from == node ?
-                    nextNode = edge.to.id :
-                    nextNode = edge.from.id;
+                nextNode = edge.from == node ? edge.to.id : edge.from.id;
 
             if (!visitedNodes.contains(nextNode)) {
                 q.push(nextNode);
@@ -82,7 +80,7 @@ function breadthBypass() {
     }
 }
 
-function depthBypass() {
+function depthFirstSearch() {
 
     var selectedNode = getSelectedNode();
 
@@ -123,7 +121,7 @@ function draw() {
             nodes.push({id: i, color: normalColor});
         }
 
-        for (var i = 1; i < data.length; i++) {
+        for (i = 1; i < data.length; i++) {
             var edge = data[i].split(' ');
             edges.push({
                 from: parseInt(edge[0]),
@@ -164,4 +162,4 @@ Array.prototype.contains = function(obj) {
         }
     }
     return false;
-}
+};
